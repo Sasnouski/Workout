@@ -4,13 +4,12 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>7 Minute Workout</title>
-  <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="css/bootstrap.css" rel="stylesheet">
   <link href="//fonts.googleapis.com/css?family=Roboto+Slab:100,300,400,700" rel="stylesheet" type="text/css">
-  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/main.css"/>
 </head>
-<body ng-app="app" ng-controller="WorkoutController">
+<body ng-app="app">
 <div class="navbar navbar-default navbar-fixed-top top-navbar">
   <div class="container app-container">
     <div class="navbar-header">
@@ -18,12 +17,26 @@
     </div>
   </div>
 </div>
+
 <div class="container body-content app-container">
-  <pre>Current Exercise: {{currentExercise | json}}</pre>
-  <pre>Time Left: {{currentExercise.duration-currentExerciseDuration}}</pre>
+  <div ng-view>
+
+  </div>
+
+
 </div>
+
+
+
 <script src="libs/angular.js"></script>
+<script src="libs/angular-route.js"></script>
+<script src="libs/angular-sanitize.js"></script>
+<script src="libs/angular-media-player.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.js"></script>
 <script src="scripts/app.js"></script>
 <script src="scripts/controllers/workout.js"></script>
+<script src="scripts/controllers/workoutvideos.js"></script>
+<script src="scripts/filters/filters.js"></script>
+
 </body>
 </html>
