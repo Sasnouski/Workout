@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app').controller('WorkoutController', ['$scope','$interval','$location', function($scope, $interval, $location){
+angular.module('app').controller('WorkoutController', ['$scope','$interval','$location','workoutHistoryTracker', 'appEvents', function($scope, $interval, $location, workoutHistoryTracker, appEvents){
 
   function WorkoutPlan(args) {
     this.exercises = [];
@@ -15,7 +15,7 @@ angular.module('app').controller('WorkoutController', ['$scope','$interval','$lo
       });
       return this.restBetweenExercise * (this.exercises.length - 1) + total;
     }
-  };
+  }
   function Exercise(args) {
     this.name = args.name;
     this.title = args.title;
@@ -43,6 +43,7 @@ angular.module('app').controller('WorkoutController', ['$scope','$interval','$lo
       }),
       duration: $scope.workoutPlan.restBetweenExercise
     };
+    workoutHistoryTracker.startTracking();
     $scope.currentExerciseIndex = -1;
     startExercise($scope.workoutPlan.exercises[0]);
   };
@@ -104,39 +105,73 @@ angular.module('app').controller('WorkoutController', ['$scope','$interval','$lo
 
     if (exercisePlan.details.name != 'rest') {
       $scope.currentExerciseIndex++;
+      $scope.$emit("appEvents:workout:exerciseStarted", exercisePlan.details);
     }
     exerciseIntervalPromise = startExerciseTimeTracking();
 
+
+
   };
+  //var startExerciseTimeTracking = function () {
+  //  var promise = $interval(function () {
+  //    ++$scope.currentExerciseDuration;
+  //    --$scope.workoutTimeRemaining;
+  //  }, 1000, $scope.currentExercise.duration - $scope.currentExerciseDuration);
+  //  promise.then(function () {
+  //    var workoutComplete = function () {
+  //      workoutHistoryTracker.endTracking(true);
+  //      $location.path('/finish');
+  //    };
+  //    var next = getNextExercise($scope.currentExercise);
+  //    if (next) {
+  //      startExercise(next);
+  //    } else {
+  //      workoutComplete();
+  //    }});
+  //  return promise;
+  //};
   var startExerciseTimeTracking = function () {
     var promise = $interval(function () {
       ++$scope.currentExerciseDuration;
       --$scope.workoutTimeRemaining;
     }, 1000, $scope.currentExercise.duration - $scope.currentExerciseDuration);
+
     promise.then(function () {
       var next = getNextExercise($scope.currentExercise);
       if (next) {
         startExercise(next);
-      } else {
-        $location.path('/finish');
-      }});
+      }
+      else {
+        workoutComplete();
+      }
+    }, function (error) {
+      console.log('Inteval promise cancelled. Error reason -' + error);
+    });
     return promise;
   };
+  var workoutComplete = function () {
+    workoutHistoryTracker.endTracking(true);
+    $location.path('/finish');
+  }
   $scope.pauseWorkout = function () {
     $interval.cancel(exerciseIntervalPromise);
     $scope.workoutPaused = true;
   };
+
   $scope.resumeWorkout = function () {
     exerciseIntervalPromise = startExerciseTimeTracking();
     $scope.workoutPaused = false;
   };
+
   $scope.pauseResumeToggle = function () {
     if ($scope.workoutPaused) {
       $scope.resumeWorkout();
-    } else {
+    }
+    else {
       $scope.pauseWorkout();
     }
-  };
+  }
+
   var getNextExercise = function (currentExercisePlan) {
     var nextExercise = null;
     if (currentExercisePlan === restExercise) {
@@ -149,6 +184,7 @@ angular.module('app').controller('WorkoutController', ['$scope','$interval','$lo
     }
     return nextExercise;
   };
+
   var init = function () {
     startWorkout();
   };
