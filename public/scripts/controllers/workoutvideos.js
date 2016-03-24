@@ -28,7 +28,7 @@ angular.module('7minWorkout')
     };
     VideoPlayerController['$inject'] = ['$scope', '$modalInstance', 'video'];
 
-    //var init = function () {
-    //};
-    //init();
+    var init = function () {
+    };
+    init();
   }]);

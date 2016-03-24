@@ -12,18 +12,30 @@
 </head>
 <body ng-app="app" ng-controller="RootController">
 <div class="navbar navbar-default navbar-fixed-top top-navbar">
-  <div class="container app-container">
+  <div class="container-fluid">
     <div class="navbar-header">
       <!--<h1>7 Minute Workout</h1>-->
-      <div class="navbar-brand">7 Minute Workout</div>
+      <div class="navbar-brand">Personal Trainer</div>
     </div>
     <ul class="nav navbar-nav navbar-right">
       <li><a ng-click="showWorkoutHistory()" title="Workout History">History</a></li>
     </ul>
   </div>
+  <div id="top-nav-container" class="second-top-nav">
+    <div id="top-nav" ng-include="currentRoute.topNav">
+    </div>
+  </div>
 </div>
-<div class="container body-content app-container">
-  <div ng-view></div>
+<div class="container-fluid">
+  <div id="content-container" class="row">
+    <div class="col-sm-2 left-nav-bar" ng-if="currentRoute.leftNav">
+      <div id="left-nav" ng-include="currentRoute.leftNav">
+      </div>
+    </div>
+    <div class="col-sm-10 col-sm-offset-2">
+      <div id="page-content" ng-view></div>
+    </div>
+  </div>
 </div>
 
 <script src="libs/angular.js"></script>
@@ -31,6 +43,7 @@
 <script src="libs/angular-sanitize.js"></script>
 <script src="libs/angular-media-player.js"></script>
 <script src="libs/angular-animate.js"></script>
+<script src="libs/angular-local-storage.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.js"></script>
 <script src="scripts/app.js"></script>
 <script src="scripts/root.js"></script>
@@ -38,6 +51,7 @@
 <script src="scripts/controllers/workoutvideos.js"></script>
 <script src="scripts/filters/filters.js"></script>
 <script src="scripts/services/services.js"></script>
+<script src="scripts/shared/model.js"></script>
 
 </body>
 </html>
